@@ -3,124 +3,572 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xem quảng cáo - Nhận 50đ</title>
+  <title>Xem Quảng Cáo & Rút Tiền</title>
+
+  <!-- Monetag SDK -->
+  <script
+    src="//libtl.com/sdk.js"
+    data-zone="11861284"
+    data-sdk="show_11861284">
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    body {
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f4f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      padding: 0;
+    }
+
+    body {
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-gradient);
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      padding: 16px;
     }
 
-    .box {
-      width: 90%;
-      max-width: 380px;
-      background: white;
-      padding: 25px;
-      border-radius: 18px;
-      text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,.1);
-    }
-
-    .balance {
-      font-size: 28px;
-      font-weight: bold;
-      margin: 20px 0;
-    }
-
-    button {
+    .card {
+      position: relative;
       width: 100%;
-      padding: 14px;
-      border: 0;
-      border-radius: 12px;
-      background: #0088ff;
-      color: white;
-      font-size: 17px;
+      max-width: 420px;
+      padding: 24px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Balance Section */
+    .balance-box {
+      position: relative;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .balance-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .balance-amount {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .currency {
+      font-size: 20px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .float-reward {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      color: var(--success);
+      font-weight: 800;
+      font-size: 18px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+      pointer-events: none;
+    }
+
+    .float-reward.show {
+      opacity: 1;
+      transform: translateY(-12px);
+    }
+
+    /* Navigation Tabs */
+    .tabs {
+      display: flex;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-muted);
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    button:disabled {
-      background: #999;
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Tab Contents */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Watch Tab */
+    .btn-main {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-main:hover:not(:disabled) {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-main:disabled {
+      opacity: 0.65;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
-    #status {
-      margin-top: 15px;
-      color: #555;
+    .status-msg {
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      min-height: 20px;
     }
+    .status-msg.success { color: var(--success); }
+    .status-msg.error { color: var(--danger); }
+    .status-msg.info { color: var(--primary); }
+
+    /* Form Withdraw */
+    .form-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #ffffff;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    .min-notice {
+      font-size: 12px;
+      color: var(--warning);
+      font-weight: 600;
+      margin-bottom: 14px;
+      background: #fffbe2;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #fef3c7;
+    }
+
+    /* History List */
+    .history-list {
+      max-height: 240px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .history-info {
+      text-align: left;
+    }
+
+    .history-method {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .history-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .history-amount {
+      font-weight: 800;
+      color: var(--danger);
+    }
+
+    .badge-status {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 700;
+      display: inline-block;
+      margin-top: 2px;
+    }
+    .badge-pending { background: #fef3c7; color: #b45309; }
+    .badge-success { background: #d1fae5; color: #047857; }
+
+    .empty-history {
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
-
 <body>
 
-<div class="box">
-  <h2>📺 Xem quảng cáo</h2>
+<div class="card">
 
-  <div class="balance">
-    Số dư: <span id="balance">0</span>đ
+  <!-- Header / Balance -->
+  <div class="balance-box">
+    <div class="balance-label">SỐ DƯ HIỆN TẠI</div>
+    <div class="balance-amount">
+      <span id="balance">0</span>
+      <span class="currency">đ</span>
+    </div>
+    <div id="floatReward" class="float-reward">+50đ</div>
   </div>
 
-  <button id="watchBtn">
-    Xem quảng cáo +50đ
-  </button>
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('watch')">📺 Kiếm Tiền</button>
+    <button class="tab-btn" onclick="switchTab('withdraw')">💸 Rút Tiền</button>
+    <button class="tab-btn" onclick="switchTab('history')">📜 Lịch Sử</button>
+  </div>
 
-  <div id="status"></div>
+  <!-- TAB 1: KIẾM TIỀN -->
+  <div id="tab-watch" class="tab-content active">
+    <button id="watchBtn" class="btn-main">
+      <span id="btnIcon">📺</span>
+      <span id="btnText">Xem quảng cáo (+50đ)</span>
+    </button>
+    <div id="watchStatus" class="status-msg"></div>
+  </div>
+
+  <!-- TAB 2: RÚT TIỀN -->
+  <div id="tab-withdraw" class="tab-content">
+    <div class="min-notice">⚠️ Tối thiểu rút: <strong>10.000đ</strong></div>
+
+    <form id="withdrawForm" onsubmit="handleWithdraw(event)">
+      <div class="form-group">
+        <label>Phương Thức Rút</label>
+        <select id="methodSelect" class="form-control" onchange="toggleBankField()">
+          <option value="Momo">Ví Điện Tử MoMo</option>
+          <option value="Bank">Ngân Hàng (ATM / Banking)</option>
+          <option value="Card">Thẻ Cào Điện Thoại</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label id="accountLabel">Số Điện Thoại MoMo</label>
+        <input type="text" id="accountInput" class="form-control" placeholder="Nhập số MoMo..." required>
+      </div>
+
+      <div class="form-group" id="bankNameGroup" style="display: none;">
+        <label>Tên Ngân Hàng & Tên Tào Khoản</label>
+        <input type="text" id="bankInput" class="form-control" placeholder="Ví dụ: MB Bank - NGUYEN VAN A">
+      </div>
+
+      <div class="form-group">
+        <label>Số Tiền Rút (VNĐ)</label>
+        <input type="number" id="amountInput" class="form-control" min="10000" step="1000" placeholder="Nhập từ 10.000 trở lên" required>
+      </div>
+
+      <button type="submit" class="btn-main" style="background: #10b981;">
+        🚀 Gửi Yêu Cầu Rút
+      </button>
+    </form>
+
+    <div id="withdrawStatus" class="status-msg"></div>
+  </div>
+
+  <!-- TAB 3: LỊCH SỬ -->
+  <div id="tab-history" class="tab-content">
+    <div id="historyList" class="history-list">
+      <!-- Dữ liệu rút tiền sẽ tự động chèn vào đây -->
+    </div>
+  </div>
+
 </div>
 
-<!--
-  DÁN SCRIPT MONETAG CỦA BẠN VÀO ĐÂY
--->
-
 <script>
-const watchBtn = document.getElementById("watchBtn");
-const balanceEl = document.getElementById("balance");
-const statusEl = document.getElementById("status");
+  const MIN_WITHDRAW = 10000;
 
-let balance = Number(localStorage.getItem("balance") || 0);
-
-balanceEl.textContent = balance;
-
-watchBtn.addEventListener("click", async () => {
-
-  watchBtn.disabled = true;
-  statusEl.textContent = "Đang mở quảng cáo...";
-
-  try {
-
-    /*
-      Gọi quảng cáo Monetag tại đây.
-
-      Sau khi Monetag xác nhận lượt quảng cáo hợp lệ,
-      backend của bạn mới được phép cộng 50đ.
-
-      Ví dụ:
-      const result = await watchMonetagAd();
-
-      if (!result.completed) {
-        throw new Error("Chưa hoàn thành quảng cáo");
-      }
-    */
-
-    statusEl.textContent =
-      "Đang chờ hệ thống xác nhận lượt xem...";
-
-    // DEMO ONLY:
-    // Không dùng đoạn này khi chạy thật.
-    setTimeout(() => {
-      statusEl.textContent =
-        "Demo: cần backend xác nhận trước khi cộng tiền.";
-      watchBtn.disabled = false;
-    }, 3000);
-
-  } catch (error) {
-    statusEl.textContent = error.message;
-    watchBtn.disabled = false;
+  // 1. Quản lý LocalStorage An Toàn
+  function getSafeBalance() {
+    const raw = localStorage.getItem("balance");
+    const parsed = parseInt(raw, 10);
+    return (!isNaN(parsed) && parsed >= 0) ? parsed : 0;
   }
-});
+
+  function getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem("withdraw_history")) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  let balance = getSafeBalance();
+  let historyData = getHistory();
+
+  const balanceEl = document.getElementById("balance");
+  const watchBtn = document.getElementById("watchBtn");
+  const btnText = document.getElementById("btnText");
+  const btnIcon = document.getElementById("btnIcon");
+  const watchStatus = document.getElementById("watchStatus");
+  const floatReward = document.getElementById("floatReward");
+
+  balanceEl.textContent = balance.toLocaleString("vi-VN");
+
+  // 2. Chuyển Đổi Tab
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+    event.target.classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+
+    if (tabName === 'history') {
+      renderHistory();
+    }
+  }
+
+  // 3. Đổi giao diện Input theo Phương Thức Rút
+  function toggleBankField() {
+    const method = document.getElementById("methodSelect").value;
+    const accountLabel = document.getElementById("accountLabel");
+    const bankNameGroup = document.getElementById("bankNameGroup");
+    const accountInput = document.getElementById("accountInput");
+
+    if (method === "Momo") {
+      accountLabel.textContent = "Số Điện Thoại MoMo";
+      accountInput.placeholder = "Nhập số điện thoại MoMo...";
+      bankNameGroup.style.display = "none";
+    } else if (method === "Bank") {
+      accountLabel.textContent = "Số Tài Khoản Ngân Hàng";
+      accountInput.placeholder = "Nhập số tài khoản...";
+      bankNameGroup.style.display = "block";
+    } else if (method === "Card") {
+      accountLabel.textContent = "Nhà Mạng & SĐT Nhận Thẻ";
+      accountInput.placeholder = "Ví dụ: Viettel - 0987xxx...";
+      bankNameGroup.style.display = "none";
+    }
+  }
+
+  // 4. Xem Quảng Cáo Monetag
+  function addReward(amount = 50) {
+    balance += amount;
+    localStorage.setItem("balance", balance.toString());
+    balanceEl.textContent = balance.toLocaleString("vi-VN");
+
+    floatReward.classList.add("show");
+    setTimeout(() => floatReward.classList.remove("show"), 1200);
+  }
+
+  function startCooldown(seconds = 5) {
+    let remain = seconds;
+    watchBtn.disabled = true;
+
+    const interval = setInterval(() => {
+      btnIcon.textContent = "⏳";
+      btnText.textContent = `Thử lại sau ${remain}s...`;
+      remain--;
+
+      if (remain < 0) {
+        clearInterval(interval);
+        watchBtn.disabled = false;
+        btnIcon.textContent = "📺";
+        btnText.textContent = "Xem quảng cáo (+50đ)";
+      }
+    }, 1000);
+  }
+
+  watchBtn.addEventListener("click", async () => {
+    watchBtn.disabled = true;
+    btnIcon.innerHTML = `<span class="spinner"></span>`;
+    btnText.textContent = "Đang tải quảng cáo...";
+    
+    watchStatus.className = "status-msg info";
+    watchStatus.textContent = "Vui lòng đợi giây lát...";
+
+    try {
+      if (typeof show_11861284 !== "function") {
+        throw new Error("SDK_NOT_LOADED");
+      }
+
+      await show_11861284();
+
+      addReward(50);
+      watchStatus.className = "status-msg success";
+      watchStatus.textContent = "✅ Hoàn thành! +50đ đã thêm vào số dư.";
+
+    } catch (error) {
+      console.error("Monetag Error:", error);
+      watchStatus.className = "status-msg error";
+      if (error.message === "SDK_NOT_LOADED") {
+        watchStatus.textContent = "❌ Tắt AdBlock để xem quảng cáo.";
+      } else {
+        watchStatus.textContent = "❌ Lỗi tải quảng cáo hoặc bạn đã hủy.";
+      }
+    } finally {
+      startCooldown(5);
+    }
+  });
+
+  // 5. Xử Lý Rút Tiền
+  function handleWithdraw(e) {
+    e.preventDefault();
+    const withdrawStatus = document.getElementById("withdrawStatus");
+    const method = document.getElementById("methodSelect").value;
+    const account = document.getElementById("accountInput").value.trim();
+    const bankDetails = document.getElementById("bankInput").value.trim();
+    const amount = parseInt(document.getElementById("amountInput").value, 10);
+
+    // Validate
+    if (isNaN(amount) || amount < MIN_WITHDRAW) {
+      withdrawStatus.className = "status-msg error";
+      withdrawStatus.textContent = `❌ Số tiền rút tối thiểu là ${MIN_WITHDRAW.toLocaleString("vi-VN")}đ.`;
+      return;
+    }
+
+    if (amount > balance) {
+      withdrawStatus.className = "status-msg error";
+      withdrawStatus.textContent = "❌ Số dư tài khoản không đủ!";
+      return;
+    }
+
+    // Trừ tiền
+    balance -= amount;
+    localStorage.setItem("balance", balance.toString());
+    balanceEl.textContent = balance.toLocaleString("vi-VN");
+
+    // Tạo lịch sử
+    const newItem = {
+      id: Date.now(),
+      method: method === 'Bank' ? `${method} (${bankDetails})` : method,
+      account: account,
+      amount: amount,
+      date: new Date().toLocaleDateString('vi-VN') + " " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}),
+      status: "Đang xử lý"
+    };
+
+    historyData.unshift(newItem);
+    localStorage.setItem("withdraw_history", JSON.stringify(historyData));
+
+    // Reset Form & Thông báo
+    document.getElementById("withdrawForm").reset();
+    toggleBankField();
+    withdrawStatus.className = "status-msg success";
+    withdrawStatus.textContent = "🎉 Đã gửi yêu cầu rút tiền thành công!";
+  }
+
+  // 6. Hiển Thị Lịch Sử
+  function renderHistory() {
+    const listEl = document.getElementById("historyList");
+    if (historyData.length === 0) {
+      listEl.innerHTML = `<div class="empty-history">Chưa có giao dịch rút tiền nào.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = historyData.map(item => `
+      <div class="history-item">
+        <div class="history-info">
+          <div class="history-method">${item.method}</div>
+          <div style="font-size:11px; color:#475569;">${item.account}</div>
+          <div class="history-date">${item.date}</div>
+          <span class="badge-status badge-pending">${item.status}</span>
+        </div>
+        <div class="history-amount">-${item.amount.toLocaleString("vi-VN")}đ</div>
+      </div>
+    `).join("");
+  }
 </script>
 
 </body>
