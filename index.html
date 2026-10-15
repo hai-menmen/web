@@ -1,575 +1,487 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xem Quảng Cáo & Rút Tiền</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bypass Tool</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
 
-  <!-- Monetag SDK -->
-  <script
-    src="//libtl.com/sdk.js"
-    data-zone="11861284"
-    data-sdk="show_11861284">
-  </script>
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+    min-height:100vh;
+    background:
+      radial-gradient(900px 520px at 50% -15%, rgba(35,90,200,.55), transparent 65%),
+      radial-gradient(700px 420px at 105% 110%, rgba(0,200,255,.16), transparent 60%),
+      #05070f;
+    color:#e8eeff;
+    display:flex;justify-content:center;
+    padding:26px 14px 70px;
+  }
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  .app{width:100%;max-width:640px;display:flex;flex-direction:column;gap:16px}
 
-  <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
-      --card-bg: rgba(255, 255, 255, 0.96);
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --border: #e2e8f0;
-    }
+  /* ---------- HEADER ---------- */
+  header{text-align:center;padding:6px 0 2px}
+  .logo{
+    width:66px;height:66px;margin:0 auto 12px;border-radius:20px;
+    background:linear-gradient(135deg,#00d4ff,#1f6feb);
+    display:flex;align-items:center;justify-content:center;font-size:30px;
+    box-shadow:0 0 36px rgba(0,180,255,.55);
+    animation:pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{box-shadow:0 0 26px rgba(0,180,255,.42)}
+    50%{box-shadow:0 0 46px rgba(0,200,255,.75)}
+  }
+  h1{
+    font-size:26px;letter-spacing:3px;font-weight:800;
+    background:linear-gradient(90deg,#7fd8ff,#ffffff,#7fd8ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sub{font-size:12.5px;color:#7d8db3;margin-top:7px;letter-spacing:.5px}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  /* ---------- PANEL ---------- */
+  .panel{
+    background:linear-gradient(180deg,rgba(18,28,58,.86),rgba(10,16,34,.86));
+    border:1px solid rgba(120,160,255,.14);
+    border-radius:18px;padding:18px;
+    box-shadow:0 12px 40px rgba(0,0,0,.45);
+  }
+  .panel h2{
+    font-size:11.5px;text-transform:uppercase;letter-spacing:1.6px;
+    color:#6f83ad;margin-bottom:13px;font-weight:700;
+    display:flex;align-items:center;gap:8px;
+  }
+  .panel h2::before{
+    content:"";width:3px;height:13px;border-radius:2px;
+    background:linear-gradient(180deg,#00d4ff,#1f6feb);
+  }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-gradient);
-      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-      padding: 16px;
-    }
+  /* ---------- SITES ---------- */
+  .sites{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+  .chip{
+    padding:11px 8px;border-radius:11px;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(120,160,255,.18);
+    font-size:12.5px;font-weight:600;text-align:center;
+    color:#b9c8ea;cursor:pointer;user-select:none;
+    transition:all .18s ease;position:relative;overflow:hidden;
+  }
+  .chip:hover{background:rgba(90,140,255,.14);border-color:rgba(120,170,255,.5);color:#fff}
+  .chip.active{
+    background:linear-gradient(135deg,#1f6feb,#00d4ff);
+    border-color:#00d4ff;color:#03111f;font-weight:800;
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+    transform:translateY(-1px);
+  }
+  .chip.active::after{
+    content:"✓";position:absolute;top:3px;right:6px;font-size:10px;opacity:.85;
+  }
+  .hint{font-size:11px;color:#5f7099;margin-top:10px;text-align:center}
 
-    .card {
-      position: relative;
-      width: 100%;
-      max-width: 420px;
-      padding: 24px;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border-radius: 28px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-    }
+  /* ---------- INPUT ---------- */
+  .input{
+    width:100%;padding:14px 16px;border-radius:12px;
+    background:rgba(8,16,38,.9);
+    border:1px solid rgba(120,160,255,.25);
+    color:#e8eeff;font-size:13.5px;outline:none;
+    transition:.2s;font-family:inherit;
+  }
+  .input::placeholder{color:#556690}
+  .input:focus{
+    border-color:#00d4ff;
+    box-shadow:0 0 0 3px rgba(0,212,255,.14);
+    background:rgba(8,20,48,.95);
+  }
 
-    /* Balance Section */
-    .balance-box {
-      position: relative;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+  .btn{
+    width:100%;margin-top:12px;padding:15px;border:none;border-radius:12px;
+    background:linear-gradient(135deg,#00d4ff,#1f6feb);
+    color:#02101f;font-weight:900;font-size:15.5px;letter-spacing:1px;
+    cursor:pointer;transition:.2s;font-family:inherit;
+    box-shadow:0 8px 24px rgba(0,140,255,.35);
+  }
+  .btn:hover:not(:disabled){filter:brightness(1.12);transform:translateY(-1px)}
+  .btn:active:not(:disabled){transform:translateY(0)}
+  .btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
 
-    .balance-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
+  /* ---------- RESULT ---------- */
+  #result{margin-top:14px}
 
-    .balance-amount {
-      font-size: 34px;
-      font-weight: 800;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
+  .loading{padding:6px 2px;text-align:center}
+  .bar{
+    width:100%;height:8px;border-radius:99px;
+    background:rgba(255,255,255,.07);overflow:hidden;margin-bottom:12px;
+  }
+  .fill{
+    height:100%;width:0%;border-radius:99px;
+    background:linear-gradient(90deg,#00d4ff,#1f6feb,#00d4ff);
+    background-size:200% 100%;
+    animation:flow 1.2s linear infinite;
+  }
+  @keyframes flow{from{background-position:0 0}to{background-position:200% 0}}
+  .ltext{font-size:13px;color:#8fa4cc;letter-spacing:.4px}
+  .ltext b{color:#00d4ff;font-size:16px}
 
-    .currency {
-      font-size: 20px;
-      color: var(--primary);
-      font-weight: 700;
-    }
+  .err{
+    padding:15px 16px;border-radius:12px;
+    background:rgba(255,60,80,.09);
+    border:1px solid rgba(255,70,90,.42);
+    color:#ff5b6e;font-weight:800;font-size:13.5px;
+    text-align:center;line-height:1.55;letter-spacing:.3px;
+    animation:shake .42s ease;
+    text-shadow:0 0 14px rgba(255,60,80,.45);
+  }
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)}
+    80%{transform:translateX(4px)}
+  }
 
-    .float-reward {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      color: var(--success);
-      font-weight: 800;
-      font-size: 18px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.5s ease;
-      pointer-events: none;
-    }
+  .ok{
+    padding:15px;border-radius:12px;
+    background:rgba(0,255,150,.07);
+    border:1px solid rgba(0,255,150,.35);
+    animation:fadeUp .35s ease;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .ok-title{
+    color:#25f5a5;font-weight:900;font-size:13px;letter-spacing:1.2px;
+    margin-bottom:10px;text-align:center;
+    text-shadow:0 0 14px rgba(0,255,150,.5);
+  }
+  .ok-link{
+    display:block;word-break:break-all;font-size:12.5px;line-height:1.6;
+    color:#8ee6ff;text-decoration:none;padding:10px 12px;border-radius:9px;
+    background:rgba(0,0,0,.32);border:1px dashed rgba(0,212,255,.35);
+  }
+  .ok-link:hover{color:#fff;border-color:#00d4ff}
+  .copy{
+    width:100%;margin-top:10px;padding:11px;border-radius:9px;border:none;
+    background:linear-gradient(135deg,#00d4ff,#1f6feb);
+    color:#02101f;font-weight:800;font-size:12.5px;letter-spacing:.6px;
+    cursor:pointer;font-family:inherit;transition:.2s;
+  }
+  .copy:hover{filter:brightness(1.12)}
 
-    .float-reward.show {
-      opacity: 1;
-      transform: translateY(-12px);
-    }
+  /* ---------- STATS ---------- */
+  .stat-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:12.5px;color:#8fa4cc;margin-bottom:9px;
+  }
+  .stat-row .big{color:#fff;font-weight:800;font-size:14px}
+  .stat-row .big b{color:#00d4ff}
+  .track{
+    width:100%;height:9px;border-radius:99px;
+    background:rgba(255,255,255,.07);overflow:hidden;
+  }
+  .fill2{
+    height:100%;width:0%;border-radius:99px;
+    background:linear-gradient(90deg,#1f6feb,#00d4ff);
+    transition:width .6s ease;
+    box-shadow:0 0 12px rgba(0,180,255,.6);
+  }
+  .limit{
+    display:none;margin-top:12px;padding:11px 13px;border-radius:10px;
+    background:rgba(255,170,0,.08);
+    border:1px solid rgba(255,180,40,.4);
+    color:#ffc247;font-size:12.5px;font-weight:800;text-align:center;
+    letter-spacing:.3px;animation:fadeUp .3s ease;
+  }
 
-    /* Navigation Tabs */
-    .tabs {
-      display: flex;
-      background: #e2e8f0;
-      padding: 4px;
-      border-radius: 14px;
-      margin-bottom: 20px;
-      gap: 4px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 10px 8px;
-      border: none;
-      background: transparent;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tab-btn.active {
-      background: #ffffff;
-      color: var(--primary);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    /* Tab Contents */
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Watch Tab */
-    .btn-main {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 16px;
-      background: var(--primary);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-main:hover:not(:disabled) {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-    }
-
-    .btn-main:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .status-msg {
-      margin-top: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      text-align: center;
-      min-height: 20px;
-    }
-    .status-msg.success { color: var(--success); }
-    .status-msg.error { color: var(--danger); }
-    .status-msg.info { color: var(--primary); }
-
-    /* Form Withdraw */
-    .form-group {
-      margin-bottom: 14px;
-      text-align: left;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 600;
-      outline: none;
-      transition: border-color 0.2s;
-      background: #ffffff;
-    }
-
-    .form-control:focus {
-      border-color: var(--primary);
-    }
-
-    .min-notice {
-      font-size: 12px;
-      color: var(--warning);
-      font-weight: 600;
-      margin-bottom: 14px;
-      background: #fffbe2;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #fef3c7;
-    }
-
-    /* History List */
-    .history-list {
-      max-height: 240px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .history-info {
-      text-align: left;
-    }
-
-    .history-method {
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .history-date {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .history-amount {
-      font-weight: 800;
-      color: var(--danger);
-    }
-
-    .badge-status {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: 700;
-      display: inline-block;
-      margin-top: 2px;
-    }
-    .badge-pending { background: #fef3c7; color: #b45309; }
-    .badge-success { background: #d1fae5; color: #047857; }
-
-    .empty-history {
-      color: var(--text-muted);
-      font-size: 13px;
-      padding: 20px 0;
-      text-align: center;
-    }
-
-    /* Spinner */
-    .spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: #ffffff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+  footer{text-align:center;font-size:11px;color:#3f4d70;margin-top:6px;letter-spacing:.4px}
+</style>
 </head>
 <body>
 
-<div class="card">
+<div class="app">
 
-  <!-- Header / Balance -->
-  <div class="balance-box">
-    <div class="balance-label">SỐ DƯ HIỆN TẠI</div>
-    <div class="balance-amount">
-      <span id="balance">0</span>
-      <span class="currency">đ</span>
+  <header>
+    <div class="logo">⚡</div>
+    <h1>BYPASS TOOL</h1>
+    <p class="sub">Hệ thống vượt link tự động • Version 2.4</p>
+  </header>
+
+  <!-- DANH SÁCH TRANG HỖ TRỢ -->
+  <section class="panel">
+    <h2>Trang hỗ trợ</h2>
+    <div class="sites" id="sites"></div>
+    <p class="hint">Ấn chọn các link trên để xác nhận</p>
+  </section>
+
+  <!-- NHẬP LINK -->
+  <section class="panel">
+    <h2>Nhập link cần vượt</h2>
+    <input class="input" id="url" type="text" spellcheck="false"
+           placeholder="Dán URL của web cần vượt link (https://...)">
+    <button class="btn" id="go">VƯỢT LINK</button>
+    <div id="result"></div>
+  </section>
+
+  <!-- THỐNG KÊ -->
+  <section class="panel">
+    <h2>Thống kê hôm nay</h2>
+    <div class="stat-row">
+      <span>Lượt vượt hôm nay</span>
+      <span class="big"><b id="cnt">0</b> / 2.000</span>
     </div>
-    <div id="floatReward" class="float-reward">+50đ</div>
-  </div>
+    <div class="track"><div class="fill2" id="bar2"></div></div>
+    <div class="limit" id="limit">⚠ Đã đạt đến giới hạn lượt vượt hôm nay 2000</div>
+  </section>
 
-  <!-- Navigation Tabs -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('watch')">📺 Kiếm Tiền</button>
-    <button class="tab-btn" onclick="switchTab('withdraw')">💸 Rút Tiền</button>
-    <button class="tab-btn" onclick="switchTab('history')">📜 Lịch Sử</button>
-  </div>
-
-  <!-- TAB 1: KIẾM TIỀN -->
-  <div id="tab-watch" class="tab-content active">
-    <button id="watchBtn" class="btn-main">
-      <span id="btnIcon">📺</span>
-      <span id="btnText">Xem quảng cáo (+50đ)</span>
-    </button>
-    <div id="watchStatus" class="status-msg"></div>
-  </div>
-
-  <!-- TAB 2: RÚT TIỀN -->
-  <div id="tab-withdraw" class="tab-content">
-    <div class="min-notice">⚠️ Tối thiểu rút: <strong>10.000đ</strong></div>
-
-    <form id="withdrawForm" onsubmit="handleWithdraw(event)">
-      <div class="form-group">
-        <label>Phương Thức Rút</label>
-        <select id="methodSelect" class="form-control" onchange="toggleBankField()">
-          <option value="Momo">Ví Điện Tử MoMo</option>
-          <option value="Bank">Ngân Hàng (ATM / Banking)</option>
-          <option value="Card">Thẻ Cào Điện Thoại</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label id="accountLabel">Số Điện Thoại MoMo</label>
-        <input type="text" id="accountInput" class="form-control" placeholder="Nhập số MoMo..." required>
-      </div>
-
-      <div class="form-group" id="bankNameGroup" style="display: none;">
-        <label>Tên Ngân Hàng & Tên Tào Khoản</label>
-        <input type="text" id="bankInput" class="form-control" placeholder="Ví dụ: MB Bank - NGUYEN VAN A">
-      </div>
-
-      <div class="form-group">
-        <label>Số Tiền Rút (VNĐ)</label>
-        <input type="number" id="amountInput" class="form-control" min="10000" step="1000" placeholder="Nhập từ 10.000 trở lên" required>
-      </div>
-
-      <button type="submit" class="btn-main" style="background: #10b981;">
-        🚀 Gửi Yêu Cầu Rút
-      </button>
-    </form>
-
-    <div id="withdrawStatus" class="status-msg"></div>
-  </div>
-
-  <!-- TAB 3: LỊCH SỬ -->
-  <div id="tab-history" class="tab-content">
-    <div id="historyList" class="history-list">
-      <!-- Dữ liệu rút tiền sẽ tự động chèn vào đây -->
-    </div>
-  </div>
-
+  <footer>© Bypass Tool — Auto System</footer>
 </div>
 
 <script>
-  const MIN_WITHDRAW = 10000;
+/* =========================================================
+   CẤU HÌNH
+   ========================================================= */
+const CONFIG = {
+  WAIT_SECONDS: 15,          // thời gian chờ
+  RATE_CONN_ERROR: 85,       // % lỗi kết nối
+  RATE_ERROR_404: 15,        // % lỗi 404
+  KNOWN_LINKS_WORK: true     // link đã biết -> trả kết quả
+};
 
-  // 1. Quản lý LocalStorage An Toàn
-  function getSafeBalance() {
-    const raw = localStorage.getItem("balance");
-    const parsed = parseInt(raw, 10);
-    return (!isNaN(parsed) && parsed >= 0) ? parsed : 0;
+/* =========================================================
+   THÔNG TIN ẨN — KHÔNG HIỂN THỊ LÊN GIAO DIỆN
+   ========================================================= */
+const HIDDEN_LINKS = {
+  "https://layma.net/5ABkvpfQu":
+    "https://www.mediafire.com/file/msusgfxw3xosdpl/AimLock+Bro.zip/file",
+
+  "https://link4m.net/eYerc":
+    "https://www.mediafire.com/file/yqefvmq4mefu7h5/Minecraft_PE_26.30_BANDISHARE.apk/file",
+
+  "https://bbmkts.com/go/Hfz47hy5":
+    "https://www.mediafire.com/file/i5eioodkjudzmty/hackff+menuFFM.zip/file",
+
+  "https://gtraffic.io/Yv2QaKD":
+    "https://pastefy.app/bbSrxKOk/raw"
+};
+
+/* =========================================================
+   DANH SÁCH TRANG HỖ TRỢ
+   ========================================================= */
+const SITES = [
+  "Gtraffic.io",
+  "Link4m",
+  "Layma.net",
+  "Traffic4k.com",
+  "Site2s.com",
+  "Bbmkt.com",
+  "system.traffichub.vn",
+  "app.trafficviet.vn",
+  "Phienchoso.com"
+];
+
+/* =========================================================
+   KHUNG GIỜ / LƯỢT DÙNG
+   ========================================================= */
+const HOUR_RANGES = [
+  [50, 100],    // 0h
+  [100, 120],   // 1h
+  [125, 145],   // 2h
+  [145, 170],   // 3h
+  [170, 210],   // 4h
+  [210, 250],   // 5h
+  [260, 400],   // 6h
+  [400, 460],   // 7h
+  [460, 530],   // 8h
+  [530, 600],   // 9h
+  [600, 900],   // 10h
+  [900, 1100],  // 11h
+  [1100, 1250], // 12h
+  [1250, 1400], // 13h
+  [1400, 1450], // 14h
+  [1450, 1520], // 15h
+  [1520, 1560], // 16h
+  [1560, 1600], // 17h
+  [1600, 1666], // 18h
+  [1666, 1700], // 19h
+  [1700, 1800], // 20h
+  [1800, 1850], // 21h
+  [1850, 1900], // 22h
+  [1900, 2000]  // 23h
+];
+
+const DAILY_LIMIT = 2000;
+const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const $ = id => document.getElementById(id);
+
+/* =========================================================
+   RENDER DANH SÁCH TRANG
+   ========================================================= */
+(function renderSites() {
+  const box = $("sites");
+  SITES.forEach(name => {
+    const el = document.createElement("div");
+    el.className = "chip";
+    el.textContent = name;
+    el.addEventListener("click", () => el.classList.toggle("active"));
+    box.appendChild(el);
+  });
+})();
+
+/* =========================================================
+   LOGIC VƯỢT LINK
+   ========================================================= */
+let busy = false;
+
+$("go").addEventListener("click", () => {
+  if (busy) return;
+
+  const resultBox = $("result");
+  const raw = $("url").value.trim();
+
+  resultBox.innerHTML = "";
+
+  /* --- kiểm tra rỗng --- */
+  if (!raw) {
+    showError("Vui lòng dán URL của web cần vượt link.");
+    return;
   }
 
-  function getHistory() {
-    try {
-      return JSON.parse(localStorage.getItem("withdraw_history")) || [];
-    } catch {
-      return [];
-    }
+  /* --- chỉ chấp nhận https:// --- */
+  if (!/^https:\/\//i.test(raw)) {
+    showError("Link không hợp lệ! Chỉ chấp nhận dạng https://");
+    return;
   }
 
-  let balance = getSafeBalance();
-  let historyData = getHistory();
+  const url = raw.replace(/\/+$/, ""); // bỏ dấu / cuối
+  busy = true;
+  $("go").disabled = true;
 
-  const balanceEl = document.getElementById("balance");
-  const watchBtn = document.getElementById("watchBtn");
-  const btnText = document.getElementById("btnText");
-  const btnIcon = document.getElementById("btnIcon");
-  const watchStatus = document.getElementById("watchStatus");
-  const floatReward = document.getElementById("floatReward");
+  /* --- hiển thị tiến trình 15 giây --- */
+  resultBox.innerHTML = `
+    <div class="loading">
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <div class="ltext">Đang vượt link... <b id="cd">${CONFIG.WAIT_SECONDS}</b>s</div>
+    </div>`;
 
-  balanceEl.textContent = balance.toLocaleString("vi-VN");
-
-  // 2. Chuyển Đổi Tab
-  function switchTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-    event.target.classList.add('active');
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-
-    if (tabName === 'history') {
-      renderHistory();
-    }
-  }
-
-  // 3. Đổi giao diện Input theo Phương Thức Rút
-  function toggleBankField() {
-    const method = document.getElementById("methodSelect").value;
-    const accountLabel = document.getElementById("accountLabel");
-    const bankNameGroup = document.getElementById("bankNameGroup");
-    const accountInput = document.getElementById("accountInput");
-
-    if (method === "Momo") {
-      accountLabel.textContent = "Số Điện Thoại MoMo";
-      accountInput.placeholder = "Nhập số điện thoại MoMo...";
-      bankNameGroup.style.display = "none";
-    } else if (method === "Bank") {
-      accountLabel.textContent = "Số Tài Khoản Ngân Hàng";
-      accountInput.placeholder = "Nhập số tài khoản...";
-      bankNameGroup.style.display = "block";
-    } else if (method === "Card") {
-      accountLabel.textContent = "Nhà Mạng & SĐT Nhận Thẻ";
-      accountInput.placeholder = "Ví dụ: Viettel - 0987xxx...";
-      bankNameGroup.style.display = "none";
-    }
-  }
-
-  // 4. Xem Quảng Cáo Monetag
-  function addReward(amount = 50) {
-    balance += amount;
-    localStorage.setItem("balance", balance.toString());
-    balanceEl.textContent = balance.toLocaleString("vi-VN");
-
-    floatReward.classList.add("show");
-    setTimeout(() => floatReward.classList.remove("show"), 1200);
-  }
-
-  function startCooldown(seconds = 5) {
-    let remain = seconds;
-    watchBtn.disabled = true;
-
-    const interval = setInterval(() => {
-      btnIcon.textContent = "⏳";
-      btnText.textContent = `Thử lại sau ${remain}s...`;
-      remain--;
-
-      if (remain < 0) {
-        clearInterval(interval);
-        watchBtn.disabled = false;
-        btnIcon.textContent = "📺";
-        btnText.textContent = "Xem quảng cáo (+50đ)";
-      }
-    }, 1000);
-  }
-
-  watchBtn.addEventListener("click", async () => {
-    watchBtn.disabled = true;
-    btnIcon.innerHTML = `<span class="spinner"></span>`;
-    btnText.textContent = "Đang tải quảng cáo...";
-    
-    watchStatus.className = "status-msg info";
-    watchStatus.textContent = "Vui lòng đợi giây lát...";
-
-    try {
-      if (typeof show_11861284 !== "function") {
-        throw new Error("SDK_NOT_LOADED");
-      }
-
-      await show_11861284();
-
-      addReward(50);
-      watchStatus.className = "status-msg success";
-      watchStatus.textContent = "✅ Hoàn thành! +50đ đã thêm vào số dư.";
-
-    } catch (error) {
-      console.error("Monetag Error:", error);
-      watchStatus.className = "status-msg error";
-      if (error.message === "SDK_NOT_LOADED") {
-        watchStatus.textContent = "❌ Tắt AdBlock để xem quảng cáo.";
-      } else {
-        watchStatus.textContent = "❌ Lỗi tải quảng cáo hoặc bạn đã hủy.";
-      }
-    } finally {
-      startCooldown(5);
-    }
+  const fill = $("fill");
+  requestAnimationFrame(() => {
+    fill.style.transition = `width ${CONFIG.WAIT_SECONDS}s linear`;
+    requestAnimationFrame(() => { fill.style.width = "100%"; });
   });
 
-  // 5. Xử Lý Rút Tiền
-  function handleWithdraw(e) {
-    e.preventDefault();
-    const withdrawStatus = document.getElementById("withdrawStatus");
-    const method = document.getElementById("methodSelect").value;
-    const account = document.getElementById("accountInput").value.trim();
-    const bankDetails = document.getElementById("bankInput").value.trim();
-    const amount = parseInt(document.getElementById("amountInput").value, 10);
-
-    // Validate
-    if (isNaN(amount) || amount < MIN_WITHDRAW) {
-      withdrawStatus.className = "status-msg error";
-      withdrawStatus.textContent = `❌ Số tiền rút tối thiểu là ${MIN_WITHDRAW.toLocaleString("vi-VN")}đ.`;
-      return;
+  let t = CONFIG.WAIT_SECONDS;
+  const timer = setInterval(() => {
+    t--;
+    const cd = $("cd");
+    if (cd) cd.textContent = t;
+    if (t <= 0) {
+      clearInterval(timer);
+      finish(url);
     }
+  }, 1000);
+});
 
-    if (amount > balance) {
-      withdrawStatus.className = "status-msg error";
-      withdrawStatus.textContent = "❌ Số dư tài khoản không đủ!";
-      return;
-    }
+/* ---------- KẾT QUẢ SAU 15 GIÂY ---------- */
+function finish(url) {
+  busy = false;
+  $("go").disabled = false;
 
-    // Trừ tiền
-    balance -= amount;
-    localStorage.setItem("balance", balance.toString());
-    balanceEl.textContent = balance.toLocaleString("vi-VN");
+  const box = $("result");
 
-    // Tạo lịch sử
-    const newItem = {
-      id: Date.now(),
-      method: method === 'Bank' ? `${method} (${bankDetails})` : method,
-      account: account,
-      amount: amount,
-      date: new Date().toLocaleDateString('vi-VN') + " " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}),
-      status: "Đang xử lý"
-    };
+  /* 1. Link nằm trong danh sách ẩn -> trả kết quả */
+  if (CONFIG.KNOWN_LINKS_WORK && HIDDEN_LINKS[url]) {
+    const out = HIDDEN_LINKS[url];
+    box.innerHTML = `
+      <div class="ok">
+        <div class="ok-title">✓ VƯỢT LINK THÀNH CÔNG</div>
+        <a class="ok-link" href="${out}" target="_blank" rel="noopener">${out}</a>
+        <button class="copy" id="copyBtn">SAO CHÉP LINK</button>
+      </div>`;
 
-    historyData.unshift(newItem);
-    localStorage.setItem("withdraw_history", JSON.stringify(historyData));
-
-    // Reset Form & Thông báo
-    document.getElementById("withdrawForm").reset();
-    toggleBankField();
-    withdrawStatus.className = "status-msg success";
-    withdrawStatus.textContent = "🎉 Đã gửi yêu cầu rút tiền thành công!";
+    $("copyBtn").addEventListener("click", () => {
+      navigator.clipboard.writeText(out).then(() => {
+        const b = $("copyBtn");
+        b.textContent = "ĐÃ SAO CHÉP ✓";
+        setTimeout(() => { b.textContent = "SAO CHÉP LINK"; }, 1500);
+      }).catch(() => {
+        const b = $("copyBtn");
+        b.textContent = "KHÔNG THỂ SAO CHÉP";
+        setTimeout(() => { b.textContent = "SAO CHÉP LINK"; }, 1500);
+      });
+    });
+    return;
   }
 
-  // 6. Hiển Thị Lịch Sử
-  function renderHistory() {
-    const listEl = document.getElementById("historyList");
-    if (historyData.length === 0) {
-      listEl.innerHTML = `<div class="empty-history">Chưa có giao dịch rút tiền nào.</div>`;
-      return;
-    }
+  /* 2. Random lỗi 85% / 15% */
+  const roll = Math.random() * 100;
 
-    listEl.innerHTML = historyData.map(item => `
-      <div class="history-item">
-        <div class="history-info">
-          <div class="history-method">${item.method}</div>
-          <div style="font-size:11px; color:#475569;">${item.account}</div>
-          <div class="history-date">${item.date}</div>
-          <span class="badge-status badge-pending">${item.status}</span>
-        </div>
-        <div class="history-amount">-${item.amount.toLocaleString("vi-VN")}đ</div>
-      </div>
-    `).join("");
+  if (roll < CONFIG.RATE_CONN_ERROR) {
+    box.innerHTML =
+      `<div class="err">✖ Lỗi kết nối thiết bị, vui lòng kiểm tra kết nối mạng của bạn</div>`;
+  } else {
+    box.innerHTML =
+      `<div class="err">✖ ERROR 404 — Do not accept this action</div>`;
   }
+}
+
+/* ---------- LỖI NHẬP LIỆU ---------- */
+function showError(msg) {
+  $("result").innerHTML = `<div class="err">✖ ${msg}</div>`;
+}
+
+/* =========================================================
+   HỆ THỐNG ĐẾM LƯỢT (NGẪU NHIÊN THEO KHUNG GIỜ)
+   ========================================================= */
+const state = { hour: -1, target: 0, count: 0 };
+
+function setHour(h) {
+  state.hour = h;
+  const [mn, mx] = HOUR_RANGES[h];
+  let t = randInt(mn, mx);
+  if (t < state.count) t = state.count; // không giảm
+  state.target = t;
+  renderStats();
+}
+
+function renderStats() {
+  const c = state.count;
+  $("cnt").textContent = c.toLocaleString("en-US");
+  $("bar2").style.width = Math.min(100, (c / DAILY_LIMIT) * 100) + "%";
+  $("limit").style.display = (c >= DAILY_LIMIT) ? "block" : "none";
+}
+
+function tick() {
+  if (state.count < state.target) {
+    state.count = Math.min(state.count + randInt(5, 20), state.target);
+    renderStats();
+  }
+  scheduleTick();
+}
+
+function scheduleTick() {
+  // cứ 1 -> 5 phút cộng thêm 5 -> 20 lượt
+  setTimeout(tick, randInt(1, 5) * 60 * 1000);
+}
+
+function checkHour() {
+  const h = new Date().getHours();
+  if (h !== state.hour) {
+    if (h === 0) state.count = randInt(0, 50); // reset 00:00
+    setHour(h);
+  }
+}
+
+(function initCounter() {
+  const h = new Date().getHours();
+  if (h === 0) {
+    state.count = randInt(0, 50);
+  } else {
+    const [mn, mx] = HOUR_RANGES[h - 1];
+    state.count = randInt(mn, mx);
+  }
+  setHour(h);
+  scheduleTick();
+  setInterval(checkHour, 20000);
+})();
 </script>
-
 </body>
-</html>
+  </html>
